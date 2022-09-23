@@ -1,9 +1,7 @@
 name: Windows (Visual Studio)
 
 on:
-  push:
-  pull_request:
-  workflow_dispatch:
+  [workflow_dispatch]:
 
 jobs:
   build:
