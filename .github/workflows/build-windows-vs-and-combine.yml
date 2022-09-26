@@ -24,7 +24,8 @@ jobs:
         run: |
           pip3 install gil
           gil update
-      - name: "Build"
+          
+      - name: "Build Release"
         run: |
           cd build
           ./vs.bat
@@ -42,6 +43,22 @@ jobs:
           lib.exe /out:lib\cppbenchmark_combined.lib lib\cppbenchmark.lib lib\cpp-optparse.lib lib\HdrHistogram.lib lib\zlib.lib
         shell: cmd
           
+      - name: Build Debug
+        run: msbuild temp\ALL_BUILD.vcxproj -t:rebuild -verbosity:minimal -property:Configuration=Debug -property:Platform=x64
+       
+      - name: Copy files
+        run: |
+          xcopy temp\Debug\cppbenchmark.lib lib_debug\
+          
+      - name: Copy files
+        run: |
+          xcopy temp\modules\Debug\*.lib lib_debug\  
+          
+      - name: Combine libraries into one
+        run: |
+          lib.exe /out:lib\cppbenchmark_combined_d.lib lib_debug\cppbenchmark.lib lib_debug\cpp-optparse.lib lib_debug\HdrHistogram.lib lib_debug\zlib.lib
+        shell: cmd
+          
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3.1.0
         with:
@@ -49,6 +66,7 @@ jobs:
           # A file, directory or wildcard pattern that describes what to upload
           path: |
             lib\cppbenchmark_combined.lib
+            lib\cppbenchmark_combined_d.lib
           if-no-files-found: error
           #retention-days: 2
         
