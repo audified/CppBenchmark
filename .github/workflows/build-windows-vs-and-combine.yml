@@ -31,11 +31,11 @@ jobs:
           
       - name: Copy files
         run: |
-          xcopy bin\cppbenchmark.lib lib
+          xcopy bin\cppbenchmark.lib lib\
           
       - name: Copy files
         run: |
-          xcopy temp\modules\RelWithDebInfo\*.lib lib   
+          xcopy temp\modules\RelWithDebInfo\*.lib lib\  
           
       - name: Combine libraries into one
         run: |
