@@ -1,7 +1,7 @@
 name: Windows (Visual Studio) Combined
 
 on:
-  #push:
+  push:
   pull_request:
   workflow_dispatch:
 
