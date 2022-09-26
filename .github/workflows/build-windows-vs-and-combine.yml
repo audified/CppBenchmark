@@ -1,0 +1,54 @@
+name: Windows (Visual Studio) Combined
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Setup Visual Studio"
+        uses: egor-tensin/vs-shell@v2
+
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.10.0
+
+      - name: "Setup cmake"
+        run: cmake --version
+
+      - name: "Setup gil"
+        run: |
+          pip3 install gil
+          gil update
+      - name: "Build"
+        run: |
+          cd build
+          ./vs.bat
+          
+      - name: Copy files
+        run: |
+          xcopy bin\cppbenchmark.lib lib\
+          
+      - name: Copy files
+        run: |
+          xcopy temp\modules\RelWithDebInfo\*.lib lib\  
+          
+      - name: Combine libraries into one
+        run: |
+          lib.exe /out:lib\cppbenchmark_combined.lib lib\cppbenchmark.lib lib\cpp-optparse.lib lib\HdrHistogram.lib lib\zlib.lib
+        shell: cmd
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: CppBenchmarkCombinedLibrary
+          # A file, directory or wildcard pattern that describes what to upload
+          path: |
+            lib\cppbenchmark_combined.lib
+          if-no-files-found: error
+          #retention-days: 2
+        
