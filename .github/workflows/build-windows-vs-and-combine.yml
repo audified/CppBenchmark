@@ -96,8 +96,8 @@ jobs:
           #body_path: CHANGELOG.md
           draft: true   #drat or published
           files: |
-            lib/cppbenchmark_combined.lib
-            lib/cppbenchmark_combined_d.lib
+            CppBenchmarkCombinedLibrary/cppbenchmark_combined.lib
+            CppBenchmarkCombinedLibrary/cppbenchmark_combined_d.lib
 
             
         
