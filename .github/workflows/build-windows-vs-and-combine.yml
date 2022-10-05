@@ -69,4 +69,35 @@ jobs:
             lib\cppbenchmark_combined_d.lib
           if-no-files-found: error
           #retention-days: 2
+          
+  # Create release for tagged refs
+  deploy:
+    if: contains(github.ref, 'tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Needed to grab CHANGELOG.md
+      #- uses: actions/checkout@v3
+
+      - name: Get Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+
+      - name: Display structure of downloaded files
+        run: ls -la
+        
+     # - name: Zip artifacts
+     #   run: 7z a -tzip CppBenchmarkCombinedLibrary.zip lib
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          #body_path: CHANGELOG.md
+          draft: true   #drat or published
+          files: |
+            lib/cppbenchmark_combined.lib
+            lib/cppbenchmark_combined_d.lib
+
+            
         
